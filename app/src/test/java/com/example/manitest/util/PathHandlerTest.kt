@@ -5,6 +5,7 @@ import org.hamcrest.Matchers
 import org.junit.Test
 
 class PathHandlerTest {
+
     @Test
     fun getImageUrlForPoster_null_returnsEmptyStr() {
         val path = null

@@ -1,6 +1,5 @@
 package com.example.manitest.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -19,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AvTimer
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,7 +27,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -45,8 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHost
 import coil.compose.AsyncImage
 import com.example.manitest.R
 import com.example.manitest.data.model.Genre
@@ -75,10 +70,6 @@ fun DetailScreen(
 
 ) {
 
-    Log.d(
-        "composition of DetailScreen",
-        (movieFlow.value.status == Status.SUCCESS).toString()
-    )
     if (movieFlow.value.status != Status.SUCCESS)
         viewModel.getDetail(movieId)
 
@@ -115,20 +106,16 @@ fun DetailScreen(
         }
 
     }
-
-
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TopSection(movieDetail: MovieDetail) {
 
-
     ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
         val (backdrop, poster, genres, title) = createRefs()
 
         val endGuideline = createGuidelineFromStart(0.34f)
-
 
         Box(modifier = Modifier
             .fillMaxWidth()
@@ -194,11 +181,7 @@ fun TopSection(movieDetail: MovieDetail) {
             }
 
         }
-
-
     }
-
-
 }
 
 @Composable

@@ -1,4 +1,4 @@
-package com.example.manitest.data
+package com.example.manitest.data.datasource
 
 import android.util.Log
 import androidx.paging.PagingSource
