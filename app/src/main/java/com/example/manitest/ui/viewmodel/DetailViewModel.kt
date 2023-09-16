@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.manitest.data.model.MovieDetail
 import com.example.manitest.data.repository.DetailRepository
-import com.example.manitest.data.repository.MovieDetailRepositoryDefault
 import com.example.manitest.di.AppModule
 import com.example.manitest.vo.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel

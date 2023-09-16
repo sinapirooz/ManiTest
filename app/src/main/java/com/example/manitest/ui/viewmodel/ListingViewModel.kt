@@ -29,9 +29,4 @@ class ListingViewModel @Inject constructor(
 
     fun getPopularMovies(): Flow<PagingData<Movie>> =
         pager
-
-
-
-
-
 }
