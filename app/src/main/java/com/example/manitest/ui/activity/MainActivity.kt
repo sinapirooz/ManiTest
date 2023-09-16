@@ -10,22 +10,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.manitest.ui.DetailScreen
 import com.example.manitest.ui.ListingScreen
+import com.example.manitest.ui.NavGraphs
 import com.example.manitest.ui.theme.ManiTestTheme
+import com.example.manitest.ui.viewmodel.ListingViewModel
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.dependency
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+
             ManiTestTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ListingScreen()
+                    DestinationsNavHost(navGraph = NavGraphs.root,
+                        dependenciesContainerBuilder = {
+                            dependency(hiltViewModel<ListingViewModel>(this@MainActivity))
+                        })
                 }
             }
         }

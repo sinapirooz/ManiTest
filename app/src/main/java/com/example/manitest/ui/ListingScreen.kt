@@ -1,9 +1,12 @@
 package com.example.manitest.ui
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +29,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -32,37 +41,69 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import coil.util.DebugLogger
 import com.example.manitest.data.model.Movie
+import com.example.manitest.ui.component.ErrorMessage
+import com.example.manitest.ui.component.Header
+import com.example.manitest.ui.component.Loading
+import com.example.manitest.ui.destinations.DetailScreenDestination
 import com.example.manitest.ui.viewmodel.ListingViewModel
 import com.example.manitest.util.PathHandler
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
+@Destination(start = true)
 @Composable
 fun ListingScreen(
-    viewModel: ListingViewModel = viewModel()
+    viewModel: ListingViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator,
 ) {
+    val movies: LazyPagingItems<Movie> = viewModel.getPopularMovies().collectAsLazyPagingItems()
 
 
-    val movies = viewModel.getPopularMovies().collectAsLazyPagingItems()
+    Column {
+        Header(modifier = Modifier.padding(bottom = 16.dp), title = "Popular")
+        MoviesGrid(
+            movieList = movies,
+            navigator
+        )
+    }
 
-    MoviesGrid(
-        movieList = movies
-    )
 
 }
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun MoviesGrid(
-    movieList: LazyPagingItems<Movie>
+    movieList: LazyPagingItems<Movie>,
+    navigator: DestinationsNavigator
 ) {
+
+
     Log.d("movieList", movieList.itemCount.toString())
     if (movieList.itemCount > 0)
         Log.d("movieList", movieList[0]?.title.toString())
     Log.d("MoviesGrid", movieList.toString())
-    Log.d("MoviesGrid", movieList.loadState.toString())
+    Log.d("MoviesGridLoad", movieList.loadState.toString())
 
-    LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
+    Log.d("MoviesGrid:", movieList.loadState.refresh.toString())
+
+    if (movieList.loadState.refresh == LoadState.Loading) {
+        Loading()
+        Log.d("LazyVerticalGrid", "LoadState")
+
+    }
+    if (movieList.loadState.refresh is LoadState.Error) {
+        ErrorMessage()
+
+    }
+
+    val scrollState = rememberLazyGridState()
+
+    LazyVerticalGrid(columns = GridCells.Fixed(3), state = scrollState, content = {
+
+
         items(movieList.itemCount) { index ->
 
             val movie = movieList[index]
@@ -73,7 +114,8 @@ fun MoviesGrid(
                         .padding(4.dp)
                         .fillMaxWidth()
                         .height(IntrinsicSize.Max)
-                        .aspectRatio(.5f),
+                        .aspectRatio(.5f)
+                        .clickable { navigator.navigate(DetailScreenDestination(movieId = movie.id)) },
                     movie
                 )
             }
@@ -138,17 +180,17 @@ fun ListingItem(
 //    }
 //}
 
-@Preview
-@Composable
-fun PreviewListingItem() {
-    MaterialTheme {
-        ListingItem(
-            modifier = Modifier.size(width = 80.dp, height = 180.dp),
-            Movie(
-                "Something",
-                "https://s100.divarcdn.com/static/photo/post/0cQTEB_nA-6WCcS00fyHFQ/678e5c4e-bb31-403b-93c5-0e3600f9cae0.jpg"
-            )
-
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun PreviewListingItem() {
+//    MaterialTheme {
+//        ListingItem(
+//            modifier = Modifier.size(width = 80.dp, height = 180.dp),
+//            Movie(
+//                "Something",
+//                "https://s100.divarcdn.com/static/photo/post/0cQTEB_nA-6WCcS00fyHFQ/678e5c4e-bb31-403b-93c5-0e3600f9cae0.jpg"
+//            )
+//
+//        )
+//    }
+//}

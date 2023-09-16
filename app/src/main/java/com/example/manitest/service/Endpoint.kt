@@ -1,5 +1,7 @@
 package com.example.manitest.service
 
+import com.example.manitest.data.model.Movie
+import com.example.manitest.data.model.MovieDetail
 import com.example.manitest.data.model.Movies
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import retrofit2.http.Body
@@ -22,5 +24,10 @@ interface Endpoint {
     suspend fun getMostPopularMovies(
         @Query("page") page: Int,
     ): Movies
+
+    @GET("3/movie/{movie_id}")
+    suspend fun getMovieDetail(
+        @Path("movie_id") id: Int
+    ): MovieDetail
 
 }
