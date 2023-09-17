@@ -17,17 +17,26 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary = Color(0xFF00031D),
     secondary = PurpleGrey80,
     tertiary = Pink80,
 
+    background = Color(0xFF030303),
+    surface = Color(0xFF141414),
+    surfaceVariant = Color(0xFFECECEC),
+    onSurfaceVariant = Color(0xFF030303),
+    onBackground = Color(0xFFE7E7E7),
+    onSurface = Color(0xFF1C1B1F),
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = Color(0xFF00031D),
     secondary = PurpleGrey40,
     tertiary = Pink40,
 
+
+    surfaceVariant = Color(0xFFECECEC),
+    onSurfaceVariant = Color(0xFF030303),
     background = Color(0xFF030303),
     surface = Color(0xFF141414),
     onPrimary = Color.White,
@@ -37,6 +46,8 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
 
 )
+
+
 
 @Composable
 fun ManiTestTheme(

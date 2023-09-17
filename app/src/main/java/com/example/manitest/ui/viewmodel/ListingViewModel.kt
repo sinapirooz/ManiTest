@@ -21,9 +21,6 @@ class ListingViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    init {
-        Log.d("ListingViewModel", "created")
-    }
 
     private val pager = repository.getPager().flow.flowOn(Dispatchers.IO).cachedIn(viewModelScope)
 

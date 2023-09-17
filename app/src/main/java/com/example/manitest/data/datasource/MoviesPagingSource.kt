@@ -1,6 +1,5 @@
 package com.example.manitest.data.datasource
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.manitest.data.model.Movie
@@ -17,11 +16,8 @@ class MoviesPagingSource (private val endpoint: Endpoint) : PagingSource<Int, Mo
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
         return try {
-            Log.d("loadload","try")
             val page = params.key ?: 1
             val response = endpoint.getMostPopularMovies(page = page)
-
-            Log.d("loadload","response")
 
 
             LoadResult.Page(
@@ -32,7 +28,6 @@ class MoviesPagingSource (private val endpoint: Endpoint) : PagingSource<Int, Mo
 
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d("loadload","catch")
 
             LoadResult.Error(e)
         }

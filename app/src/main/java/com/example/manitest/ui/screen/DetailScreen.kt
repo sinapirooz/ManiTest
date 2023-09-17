@@ -1,21 +1,27 @@
-package com.example.manitest.ui
+package com.example.manitest.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.AvTimer
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material3.Icon
@@ -28,7 +34,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -48,6 +53,9 @@ import com.example.manitest.data.model.Genre
 import com.example.manitest.data.model.MovieDetail
 import com.example.manitest.ui.component.ErrorMessage
 import com.example.manitest.ui.component.Loading
+import com.example.manitest.ui.theme.backgroundColor
+import com.example.manitest.ui.theme.onSurfaceColor
+import com.example.manitest.ui.theme.surfaceColor
 import com.example.manitest.ui.viewmodel.DetailViewModel
 import com.example.manitest.util.PathHandler
 import com.example.manitest.vo.Resource
@@ -73,24 +81,28 @@ fun DetailScreen(
     if (movieFlow.value.status != Status.SUCCESS)
         viewModel.getDetail(movieId)
 
-    Surface(modifier = Modifier.background(Color.White)) {
+    Surface(modifier = Modifier
+        .background(surfaceColor)
+        .fillMaxSize()) {
         when (movieFlow.value.status) {
             Status.SUCCESS -> {
-                Column(modifier = Modifier.background(Color.White)) {
-                    movieFlow.value.data?.let { TopSection(movieDetail = it) }
+                Column(modifier = Modifier
+                    .background(surfaceColor)
+                    .fillMaxSize()) {
+                    movieFlow.value.data?.let { TopSection(movieDetail = it, onBackClicked = {navigator.popBackStack()}) }
                     Spacer(
                         modifier = Modifier
                             .padding(top = 16.dp)
                             .height(1.dp)
                             .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
+                            .background(backgroundColor)
                     )
                     movieFlow.value.data?.let { Specs(movieDetail = it) }
                     Spacer(
                         modifier = Modifier
                             .height(1.dp)
                             .fillMaxWidth()
-                            .background(Color.Gray)
+                            .background(backgroundColor)
                     )
                     movieFlow.value.data?.let { Overview(text = it.overview) }
                 }
@@ -101,7 +113,7 @@ fun DetailScreen(
             }
 
             Status.ERROR -> {
-                ErrorMessage()
+                ErrorMessage(onSurfaceColor)
             }
         }
 
@@ -110,7 +122,7 @@ fun DetailScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TopSection(movieDetail: MovieDetail) {
+fun TopSection(movieDetail: MovieDetail, onBackClicked: (() -> Unit)) {
 
     ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
         val (backdrop, poster, genres, title) = createRefs()
@@ -133,6 +145,8 @@ fun TopSection(movieDetail: MovieDetail) {
         AsyncImage(
             model = PathHandler.getImageUrlForaBackdrop(movieDetail.posterPath),
             contentDescription = "",
+            error = painterResource(R.drawable.poster_container),
+            placeholder = painterResource(R.drawable.poster_container),
             modifier = Modifier
                 .height(180.dp)
                 .constrainAs(poster) {
@@ -142,26 +156,58 @@ fun TopSection(movieDetail: MovieDetail) {
                 }, // this is the modifier you passed to SubcomposeAsyncImage
         )
 
+        Row(
+            modifier = Modifier
+                .wrapContentHeight()
+                .padding(top = 16.dp)
+                .padding(horizontal = 15.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Icon(
+                modifier = Modifier
+                    .clickable {onBackClicked()},
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = "",
+                tint = surfaceColor
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                modifier = Modifier
+                    .clickable {},
+                imageVector = Icons.Filled.Share,
+                contentDescription = "",
+                tint = surfaceColor
+            )
+            Spacer(modifier = Modifier.width(15.dp))
+            Icon(
+                modifier = Modifier
+                    .clickable {},
+                imageVector = Icons.Filled.FavoriteBorder,
+                contentDescription = "",
+                tint = surfaceColor
+            )
+        }
         Text(
 
             text = movieDetail.title,
             modifier = Modifier
-                .background(Color.Yellow)
-
                 .fillMaxWidth(.6f)
                 .wrapContentHeight()
                 .constrainAs(title) {
                     start.linkTo(endGuideline, margin = 16.dp)
                     top.linkTo(backdrop.bottom, margin = 16.dp)
 
-                }
+                },
+
+            style = TextStyle(
+                fontWeight = FontWeight.Bold
+            ),
+            color = backgroundColor
         )
 
         Box(
             modifier = Modifier
                 .fillMaxWidth(.6f)
-                .background(Color.Blue)
-
                 .constrainAs(genres) {
                     start.linkTo(endGuideline, margin = 16.dp)
                     top.linkTo(title.bottom, margin = 16.dp)
@@ -227,12 +273,12 @@ fun GenreItem(
         modifier = Modifier
             .padding(4.dp)
             .border(
-                1.dp, Color.Gray, RoundedCornerShape(30.dp)
+                1.dp, backgroundColor, RoundedCornerShape(30.dp)
             )
     ) {
         Text(
             text = item.name,
-            color = Color.Gray,
+            color = backgroundColor,
             style = TextStyle(
                 fontWeight = FontWeight.Bold
             ),
@@ -261,14 +307,14 @@ fun SpecItem(
             modifier = modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row {
-                Text(text = text, color = Color.Black)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(text = text, color = onSurfaceColor, fontSize = 13.sp )
                 Icon(
                     icon,
                     contentDescription = stringResource(id = R.string.star_icon_description)
                 )
             }
-            Text(text = subText)
+            Text(text = subText, color = onSurfaceColor, fontSize = 13.sp)
 
         }
     }

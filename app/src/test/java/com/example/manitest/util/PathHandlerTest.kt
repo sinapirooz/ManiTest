@@ -12,4 +12,11 @@ class PathHandlerTest {
 
         assertThat(PathHandler.getImageUrlForPoster(path), Matchers.`is`(""))
     }
+
+    @Test
+    fun getImageUrlForPoster_Str_returnsCorrect() {
+        val path = "iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg"
+        val final = "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg"
+        assertThat(PathHandler.getImageUrlForPoster(path), Matchers.`is`(final))
+    }
 }

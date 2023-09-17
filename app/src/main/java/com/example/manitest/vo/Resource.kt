@@ -1,6 +1,5 @@
 package com.example.manitest.vo
 
-import android.util.Log
 
 
 data class Resource<T>(var status: Status, var data: T?, val message: String?) {
@@ -18,7 +17,6 @@ data class Resource<T>(var status: Status, var data: T?, val message: String?) {
         }
 
         fun <T> loading(data: T?): Resource<T> {
-            Log.d("gbut",data.toString())
             return Resource(Status.LOADING, data, null)
         }
 

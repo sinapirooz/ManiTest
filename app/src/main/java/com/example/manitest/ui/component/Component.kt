@@ -23,17 +23,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.manitest.ui.theme.headerColor
+import com.example.manitest.ui.theme.indicatorColor
+import com.example.manitest.ui.theme.onBackgroundColor
 
 @Composable
 fun Header(
     modifier: Modifier,
-    title: String) {
+    title: String
+) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        Row(Modifier.background(Color(0xFF222222))) {
+        Row(Modifier.background(headerColor)) {
             Row(Modifier.padding(horizontal = 12.dp, vertical = 16.dp)) {
                 Text(
                     text = title,
-                    color = Color.White,
+                    color = onBackgroundColor,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold
                     ),
@@ -46,7 +50,7 @@ fun Header(
                         .size(24.dp)
                         .align(Alignment.CenterVertically),
                     contentDescription = null,
-                    tint = Color.White
+                    tint = onBackgroundColor
                 )
             }
         }
@@ -54,10 +58,16 @@ fun Header(
 }
 
 @Composable
-fun ErrorMessage() {
+fun ErrorMessage(color: Color) {
 
     Box(Modifier.fillMaxSize()) {
-        Text(text = "Error in fetching data", modifier = Modifier.padding(16.dp).align(Alignment.Center))
+        Text(
+            text = "Error in fetching data",
+            color = color,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.Center)
+        )
 
     }
 
@@ -67,7 +77,9 @@ fun ErrorMessage() {
 fun Loading() {
 
     Box(Modifier.fillMaxSize()) {
-        CircularProgressIndicator(modifier = Modifier.padding(16.dp).align(Alignment.Center))
+        CircularProgressIndicator(modifier = Modifier
+            .padding(16.dp)
+            .align(Alignment.Center), color = indicatorColor)
     }
 
 }

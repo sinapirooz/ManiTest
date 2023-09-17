@@ -9,3 +9,12 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+
+val backgroundColor = Color(0xFF2C2C2C)
+val onBackgroundColor = Color(0xFFFFFFFF)
+val cardColor = Color(0xFF1F1F1F)
+val surfaceColor = Color(0xFFF8F8F8)
+val onSurfaceColor = Color(0xFF000000)
+val headerColor = Color(0xFF242424)
+val indicatorColor = Color(0xFF6650a4)
